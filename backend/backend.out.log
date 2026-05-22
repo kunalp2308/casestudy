@@ -1,0 +1,4 @@
+INFO:     127.0.0.1:56199 - "GET /api/auth/google/login HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:65315 - "GET /api/auth/google/login HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:61687 - "HEAD /api/auth/google/login HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:57071 - "GET /api/auth/google/login HTTP/1.1" 307 Temporary Redirect
