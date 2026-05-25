@@ -61,6 +61,7 @@ export function TaskFormModal({
             type="date"
             value={form.due_date}
             onChange={(event) => onChange({ due_date: event.target.value })}
+            required
           />
         </Field>
         <Field label="Status">

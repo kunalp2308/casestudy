@@ -34,18 +34,18 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    role_ids: list[int] = Field(default_factory=list)
+    role_ids: list[int] = Field(..., min_length=1, max_length=1)
 
 
 class UserUpdate(BaseModel):
     full_name: str | None = Field(default=None, min_length=2, max_length=120)
     email: str | None = Field(default=None, min_length=3, max_length=255, pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
     is_active: bool | None = None
-    role_ids: list[int] | None = None
+    role_ids: list[int] | None = Field(default=None, min_length=1, max_length=1)
 
 
 class UserRoleAssignment(BaseModel):
-    role_ids: list[int] = Field(default_factory=list)
+    role_ids: list[int] = Field(..., min_length=1, max_length=1)
 
 
 class UserRead(UserBase):
@@ -83,7 +83,10 @@ class ProjectBase(BaseModel):
 
 
 class ProjectCreate(ProjectBase):
-    pass
+    description: str = Field(..., min_length=1)
+    start_date: date
+    end_date: date
+    owner_id: int
 
 
 class ProjectUpdate(BaseModel):
@@ -118,7 +121,7 @@ class TaskBase(BaseModel):
 
 
 class TaskCreate(TaskBase):
-    pass
+    due_date: date
 
 
 class TaskUpdate(BaseModel):

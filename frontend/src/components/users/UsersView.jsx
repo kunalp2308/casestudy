@@ -27,22 +27,13 @@ export function UsersView({ users, roles, onSave, onDelete }) {
       full_name: user.full_name,
       email: user.email,
       is_active: user.is_active,
-      role_ids: user.roles.map((role) => role.id),
+      role_ids: user.roles[0] ? [user.roles[0].id] : [],
     });
     setShowModal(true);
   }
 
   function updateForm(values) {
     setForm((current) => ({ ...current, ...values }));
-  }
-
-  function toggleRole(roleId) {
-    setForm((current) => ({
-      ...current,
-      role_ids: current.role_ids.includes(roleId)
-        ? current.role_ids.filter((id) => id !== roleId)
-        : [...current.role_ids, roleId],
-    }));
   }
 
   async function submit(event) {
@@ -116,7 +107,6 @@ export function UsersView({ users, roles, onSave, onDelete }) {
           onCancel={reset}
           onChange={updateForm}
           onSubmit={submit}
-          onToggleRole={toggleRole}
         />
       )}
     </section>

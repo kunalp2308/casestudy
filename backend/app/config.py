@@ -13,7 +13,6 @@ DEFAULT_DATABASE_URL = "mysql+pymysql://root:Root%40123@localhost:3306/task_trac
 class Settings:
     database_url: str = os.getenv("MY_SQL_DATABASE_URL", DEFAULT_DATABASE_URL)
     frontend_origin: str = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
-    frontend_app_url: str = os.getenv("FRONTEND_APP_URL", "http://localhost:5173")
     google_client_id: str = os.getenv("GOOGLE_CLIENT_ID", "")
     google_client_secret: str = os.getenv("GOOGLE_CLIENT_SECRET", "")
     google_redirect_uri: str = os.getenv(
@@ -27,10 +26,6 @@ class Settings:
     jwt_secret_key: str = os.getenv("JWT_SECRET_KEY", "dev-only-change-this-secret")
     access_token_expire_minutes: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "480"))
     oauth_state_expire_minutes: int = int(os.getenv("OAUTH_STATE_EXPIRE_MINUTES", "10"))
-    bootstrap_first_google_user_as_admin: bool = os.getenv(
-        "BOOTSTRAP_FIRST_GOOGLE_USER_AS_ADMIN",
-        "true",
-    ).lower() in {"1", "true", "yes", "on"}
 
     @property
     def google_admin_email_set(self) -> set[str]:

@@ -16,6 +16,7 @@ import { RolesView } from "./components/roles/RolesView";
 import { TasksView } from "./components/tasks/TasksView";
 import { UsersView } from "./components/users/UsersView";
 import { hasAnyRole, hasRole } from "./utils/permissions";
+import { showToast } from "./utils/toast";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -85,18 +86,22 @@ export default function App() {
     }
   }
 
-  async function loadSession() {
+  async function loadSession({ showLoginToast = false } = {}) {
     setAuthLoading(true);
     setError("");
 
     try {
       const currentUser = await api.auth.me();
       setAuthUser(currentUser);
+      if (showLoginToast) {
+        showToast.success("Logged in successfully");
+      }
       await loadData();
     } catch (err) {
       clearAccessToken();
       setAuthUser(null);
       setError(err.message);
+      showToast.error("Authentication failed: " + err.message);
       setLoading(false);
     } finally {
       setAuthLoading(false);
@@ -122,7 +127,7 @@ export default function App() {
           document.title,
           window.location.pathname,
         );
-        loadSession();
+        loadSession({ showLoginToast: true });
         return;
       }
     }
@@ -140,13 +145,16 @@ export default function App() {
     try {
       if (id) {
         await api[entity].update(id, payload);
+        showToast.success(`${entity} updated successfully`);
       } else {
         await api[entity].create(payload);
+        showToast.success(`${entity} created successfully`);
       }
 
       await loadData();
     } catch (err) {
       setError(err.message);
+      showToast.error(err.message);
       throw err;
     }
   }
@@ -156,9 +164,11 @@ export default function App() {
 
     try {
       await api[entity].remove(id);
+      showToast.success(`${entity} deleted successfully`);
       await loadData();
     } catch (err) {
       setError(err.message);
+      showToast.error(err.message);
     }
   }
 
@@ -167,9 +177,11 @@ export default function App() {
 
     try {
       await api.tasks.complete(id);
+      showToast.success("Task marked as complete");
       await loadData();
     } catch (err) {
       setError(err.message);
+      showToast.error(err.message);
     }
   }
 
@@ -195,6 +207,7 @@ export default function App() {
     setSelectedProjectId("all");
     setActiveTab("dashboard");
     setError("");
+    showToast.info("Logged out successfully");
   }
 
   function renderActiveView() {

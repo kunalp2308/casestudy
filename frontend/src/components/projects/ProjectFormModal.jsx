@@ -39,6 +39,7 @@ export function ProjectFormModal({
           value={form.description}
           onChange={(event) => onChange({ description: event.target.value })}
           rows={3}
+          required
         />
       </Field>
       <div className="two-column">
@@ -47,6 +48,8 @@ export function ProjectFormModal({
             type="date"
             value={form.start_date}
             onChange={(event) => onChange({ start_date: event.target.value })}
+            max={form.end_date || undefined}
+            required
           />
         </Field>
         <Field label="End date">
@@ -54,6 +57,8 @@ export function ProjectFormModal({
             type="date"
             value={form.end_date}
             onChange={(event) => onChange({ end_date: event.target.value })}
+            min={form.start_date || undefined}
+            required
           />
         </Field>
       </div>
@@ -61,8 +66,9 @@ export function ProjectFormModal({
         <select
           value={form.owner_id}
           onChange={(event) => onChange({ owner_id: event.target.value })}
+          required
         >
-          <option value="">Unassigned</option>
+          <option value="">Select owner</option>
           {users.map((user) => (
             <option key={user.id} value={user.id}>
               {user.full_name}

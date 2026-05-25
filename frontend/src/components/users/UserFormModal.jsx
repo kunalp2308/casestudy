@@ -8,7 +8,6 @@ export function UserFormModal({
   onCancel,
   onChange,
   onSubmit,
-  onToggleRole,
 }) {
   return (
     <Modal
@@ -56,9 +55,11 @@ export function UserFormModal({
         {roles.map((role) => (
           <label className="check-field" key={role.id}>
             <input
-              type="checkbox"
-              checked={form.role_ids.includes(role.id)}
-              onChange={() => onToggleRole(role.id)}
+              type="radio"
+              name="user-role"
+              checked={form.role_ids[0] === role.id}
+              onChange={() => onChange({ role_ids: [role.id] })}
+              required
             />
             <span>{role.name}</span>
           </label>

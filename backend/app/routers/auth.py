@@ -18,7 +18,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 def _frontend_callback_url(error: str | None = None, access_token: str | None = None) -> str:
-    base_url = settings.frontend_app_url.rstrip('/')
+    base_url = settings.frontend_origin.rstrip('/')
     if access_token:
         return f"{base_url}#access_token={quote(access_token)}"
     if error:
@@ -78,15 +78,14 @@ def _fetch_google_profile(access_token: str) -> dict:
         ) from exc
 
 
-def _assign_login_roles(db: Session, user: models.User, is_new_user: bool, is_first_user: bool):
+def _assign_login_roles(db: Session, user: models.User, is_new_user: bool):
     admin_role = get_role_by_name(db, "admin")
     read_only_role = get_role_by_name(db, "individual read only user")
     email = user.email.lower()
 
     should_be_admin = email in settings.google_admin_email_set
-    should_bootstrap_admin = settings.bootstrap_first_google_user_as_admin and is_first_user
 
-    if should_be_admin or (is_new_user and should_bootstrap_admin):
+    if should_be_admin:
         if admin_role and admin_role not in user.roles:
             user.roles.append(admin_role)
     elif is_new_user and read_only_role:
@@ -105,7 +104,6 @@ def _upsert_google_user(db: Session, profile: dict) -> models.User:
     if email_verified is False:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Google email is not verified")
 
-    existing_user_count = db.query(models.User).count()
     user = (
         db.query(models.User)
         .options(selectinload(models.User.roles))
@@ -138,7 +136,7 @@ def _upsert_google_user(db: Session, profile: dict) -> models.User:
         user.google_sub = user.google_sub or google_sub
         user.avatar_url = avatar_url
 
-    _assign_login_roles(db, user, is_new_user, existing_user_count == 0)
+    _assign_login_roles(db, user, is_new_user)
     commit_or_409(db, "Unable to store Google user")
     db.refresh(user)
     return user
