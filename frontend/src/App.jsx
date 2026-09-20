@@ -121,7 +121,6 @@ export default function App() {
         setAuthLoading(false);
       } else if (token) {
         setAccessToken(token);
-        // Clear hash from URL without reloading
         window.history.replaceState(
           {},
           document.title,
