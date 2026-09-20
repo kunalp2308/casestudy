@@ -109,33 +109,64 @@ export default function App() {
   }
 
   useEffect(() => {
-    const hash = window.location.hash;
+    async function initializeAuth() {
+      console.log("AUTH: initializeAuth started");
 
-    if (hash) {
-      const params = new URLSearchParams(hash.substring(1));
-      const token = params.get("access_token");
-      const authError = params.get("auth_error");
+      const hash = window.location.hash;
+      console.log("AUTH: hash exists:", !!hash);
 
-      if (authError) {
-        setError(decodeURIComponent(authError));
+      if (hash) {
+        const params = new URLSearchParams(hash.substring(1));
+        const token = params.get("access_token");
+        const authError = params.get("auth_error");
+
+        console.log("AUTH: token exists:", !!token);
+        console.log("AUTH: auth error exists:", !!authError);
+
+        if (authError) {
+          console.log("AUTH: handling auth error");
+
+          setError(decodeURIComponent(authError));
+          setAuthLoading(false);
+          return;
+        }
+
+        if (token) {
+          console.log("AUTH: token received");
+
+          setAccessToken(token);
+
+          console.log("AUTH: token stored:", getAccessToken() !== null);
+
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname,
+          );
+
+          console.log("AUTH: calling loadSession");
+
+          await loadSession({ showLoginToast: true });
+
+          console.log("AUTH: loadSession completed");
+
+          return;
+        }
+      }
+
+      console.log("AUTH: existing token:", getAccessToken() !== null);
+
+      if (getAccessToken()) {
+        console.log("AUTH: calling loadSession with existing token");
+
+        await loadSession();
+      } else {
+        console.log("AUTH: no token, showing login");
         setAuthLoading(false);
-      } else if (token) {
-        setAccessToken(token);
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname,
-        );
-        loadSession({ showLoginToast: true });
-        return;
       }
     }
 
-    if (getAccessToken()) {
-      loadSession();
-    } else {
-      setAuthLoading(false);
-    }
+    initializeAuth();
   }, []);
 
   async function saveEntity(entity, id, payload) {
