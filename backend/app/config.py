@@ -7,11 +7,9 @@ from dotenv import load_dotenv
 ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(ENV_FILE)
 
-DEFAULT_DATABASE_URL = "mysql+pymysql://root:Root%40123@localhost:3306/task_tracker"
-
 
 class Settings:
-    database_url: str = os.getenv("MY_SQL_DATABASE_URL", DEFAULT_DATABASE_URL)
+    database_url: str = os.getenv("MY_SQL_DATABASE_URL")
     frontend_origin: str = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
     google_client_id: str = os.getenv("GOOGLE_CLIENT_ID", "")
     google_client_secret: str = os.getenv("GOOGLE_CLIENT_SECRET", "")
