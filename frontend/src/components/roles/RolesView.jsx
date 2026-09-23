@@ -45,14 +45,6 @@ export function RolesView({ roles, onSave, onDelete }) {
       <section className="surface table-surface">
         <div className="section-heading">
           <h2>Roles</h2>
-          <button
-            className="primary-button"
-            type="button"
-            onClick={openNewRole}
-          >
-            <Plus size={17} />
-            New Role
-          </button>
         </div>
         {roles.length === 0 ? (
           <EmptyState label="No roles" />
