@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Edit3, Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { createEmptyRole } from "../../constants/entities";
 import { EmptyState, IconButton } from "../common";
 import { RoleFormModal } from "./RoleFormModal";
@@ -63,7 +63,7 @@ export function RolesView({ roles, onSave, onDelete }) {
                   <tr key={role.id}>
                     <td>{role.name}</td>
                     <td>{role.description || ""}</td>
-                    <td className="row-actions">
+                    {/* <td className="row-actions">
                       <IconButton label="Edit role" onClick={() => edit(role)}>
                         <Edit3 size={16} />
                       </IconButton>
@@ -74,7 +74,7 @@ export function RolesView({ roles, onSave, onDelete }) {
                       >
                         <Trash2 size={16} />
                       </IconButton>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>
